@@ -60,23 +60,28 @@ class OutputBox extends React.Component{
     }
 
     componentDidMount(){
-        this.props.getBoxHeight(this._containerRef.current.scrollHeight)
+        this.triggerScroll()
     }
 
     componentDidUpdate(prevProps){
         if(this.props.processing !== prevProps.processing){
-            this.props.getBoxHeight(this._containerRef.current.scrollHeight)
+            this.triggerScroll()
         }
         if(this.props.messages.length !== prevProps.messages.length){
-            this.props.getBoxHeight(this._containerRef.current.scrollHeight)
+            this.triggerScroll()
         }
-        
+    }
+
+    triggerScroll = () => {
+        const scrollHeight = this._containerRef.current.scrollHeight || 600
+        const dummyBoxHeight = 60
+        this.props.takeScrollToBottom(scrollHeight + dummyBoxHeight)
     }
 
 
     render(){
         return (
-            <RootStyle ref={this._containerRef}>
+            <RootStyle  ref={this._containerRef}>
                 {
                     this.props.messages &&
                     this.props.messages.length &&
@@ -84,7 +89,10 @@ class OutputBox extends React.Component{
                         const isBot = msg.agent === 'bot'
                         return(
                             <ChatboxStyle key={i} isBot={isBot} >
-                                <ImageStyle src={isBot? botImage : accountImage} isBot={isBot} />
+                                <ImageStyle 
+                                    alt={isBot? 'Bot':'User'}
+                                    src={isBot? botImage : accountImage} isBot={isBot} 
+                                />
                                 <MessageStyle>
                                     {msg.messageText}
                                 </MessageStyle>
@@ -92,13 +100,13 @@ class OutputBox extends React.Component{
                         )
                     })
                 }
-                <DummyStyle>
+                <DummyStyle >
                     {
                         this.props.processing?
                         <ChatboxStyle isBot={true} >
                             <ImageStyle src={botImage} isBot={true} />
                             <MessageStyle>
-                                <img src={loaderGif} style={{ height:'20px', width:'45px', padding:0, backgroundColor:"inherit" }} />
+                                <img alt='Bot' src={loaderGif} style={{ height:'20px', width:'45px', padding:0, backgroundColor:"inherit" }} />
                             </MessageStyle>
                         </ChatboxStyle>
                         :

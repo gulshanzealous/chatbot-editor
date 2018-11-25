@@ -48,25 +48,13 @@ class Playground extends React.Component{
         }
     }
 
-    getBoxHeight = (height) => {
+    handleScrollToBottom = (height) => {
         if(this._scrollRef){
             this._scrollRef.scrollTop = height
         } else {
-            this.setState({
-                containerHeight: height
-            })
-        }
-    }
-
-    componentDidMount = () => {
-        if(this._scrollRef){
-            this._scrollRef.scrollTop = this.state.containerHeight
-        }
-    }
-
-    componentDidUpdate = () => {
-        if(this._scrollRef){
-            this._scrollRef.scrollTop = this.state.containerHeight
+            setTimeout((height)=>{
+                this._scrollRef.scrollTop = height
+            },1,height)
         }
     }
 
@@ -85,7 +73,7 @@ class Playground extends React.Component{
                                 messages={this.props.messages}
                                 processing={this.props.processing}
                                 processingError={this.props.processingError}
-                                getBoxHeight={this.getBoxHeight}
+                                takeScrollToBottom={this.handleScrollToBottom}
                             />
                         </PerfectScrollbar>
                     </OutputBoxStyle>

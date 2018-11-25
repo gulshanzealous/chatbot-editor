@@ -21,6 +21,7 @@ export const sendMessageCommand = ({ userMessage }) => {
                 }
             })
 
+            // query an api or execute something here
             setTimeout(()=>{
                 dispatch({
                     type:EXECUTE_COMMAND_SUCCESS,
