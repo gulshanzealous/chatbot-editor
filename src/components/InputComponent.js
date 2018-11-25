@@ -9,7 +9,6 @@ const RootStyle = styled.div`
 const InputStyle = styled.input`
     width:100%;
     height:100%;
-    color:#fff;
     padding:0 40px;
     font-size:1.1em;
     border:none;
@@ -40,7 +39,7 @@ class InputComponent extends React.Component{
 
     handleKeyPress = (e) => {
         if(e.key === 'Enter'){
-            this.props.onSubmit({ command: this.state.command})
+            this.props.onSubmit && this.props.onSubmit({ command: this.state.command})
             this.setState({ command:'' })
         }
     }

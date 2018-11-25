@@ -1,5 +1,5 @@
 import React from 'react'
-import styled, {css} from 'styled-components'
+import styled, { css } from 'styled-components'
 import accountImage from '../images/accountImage.jpg'
 import botImage from '../images/bot.png'
 import loaderGif from '../images/loader.gif'
@@ -45,13 +45,13 @@ const MessageStyle = styled.div`
 `
 
 const DummyStyle = styled.div`
-    height:100px !important;
+    flex:0 0 20px !important;
     width:100%;
     margin:30px 0;
 `
 
-class OutputBox extends React.Component{
-    constructor(props){
+class OutputBox extends React.Component {
+    constructor(props) {
         super(props)
         this._containerRef = React.createRef()
         this.state = {
@@ -59,15 +59,15 @@ class OutputBox extends React.Component{
         }
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.triggerScroll()
     }
 
-    componentDidUpdate(prevProps){
-        if(this.props.processing !== prevProps.processing){
+    componentDidUpdate(prevProps) {
+        if (this.props.processing !== prevProps.processing) {
             this.triggerScroll()
         }
-        if(this.props.messages.length !== prevProps.messages.length){
+        if (this.props.messages.length !== prevProps.messages.length) {
             this.triggerScroll()
         }
     }
@@ -79,19 +79,19 @@ class OutputBox extends React.Component{
     }
 
 
-    render(){
+    render() {
         return (
-            <RootStyle  ref={this._containerRef}>
+            <RootStyle ref={this._containerRef}>
                 {
                     this.props.messages &&
                     this.props.messages.length &&
-                    this.props.messages.map((msg,i) => {
+                    this.props.messages.map((msg, i) => {
                         const isBot = msg.agent === 'bot'
-                        return(
+                        return (
                             <ChatboxStyle key={i} isBot={isBot} >
-                                <ImageStyle 
-                                    alt={isBot? 'Bot':'User'}
-                                    src={isBot? botImage : accountImage} isBot={isBot} 
+                                <ImageStyle
+                                    alt={isBot ? 'Bot' : 'User'}
+                                    src={isBot ? botImage : accountImage} isBot={isBot}
                                 />
                                 <MessageStyle>
                                     {msg.messageText}
@@ -102,15 +102,15 @@ class OutputBox extends React.Component{
                 }
                 <DummyStyle >
                     {
-                        this.props.processing?
-                        <ChatboxStyle isBot={true} >
-                            <ImageStyle src={botImage} isBot={true} />
-                            <MessageStyle>
-                                <img alt='Bot' src={loaderGif} style={{ height:'20px', width:'45px', padding:0, backgroundColor:"inherit" }} />
-                            </MessageStyle>
-                        </ChatboxStyle>
-                        :
-                        null
+                        this.props.processing ?
+                            <ChatboxStyle isBot={true} >
+                                <ImageStyle src={botImage} isBot={true} />
+                                <MessageStyle>
+                                    <img alt='Bot' src={loaderGif} style={{ height: '20px', width: '45px', padding: 0, backgroundColor: "inherit" }} />
+                                </MessageStyle>
+                            </ChatboxStyle>
+                            :
+                            null
                     }
                 </DummyStyle>
             </RootStyle>

@@ -12,3 +12,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.monaco-editor, .monaco-editor-background, .monaco-editor .inputarea.ime-input{
+  background-color: #161616 !important;
+}
+
+.monaco-editor .margin{
+  background-color: #161616 !important;
+}

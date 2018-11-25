@@ -59,7 +59,7 @@ const messages = [
 
 const INITIAL_STATE = {
     messages:messages,
-    processing:true,
+    processing:false,
     processingError:''
 }
 

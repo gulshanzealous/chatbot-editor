@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
-import {connect} from 'react-redux'
-import {OutputBox} from '../containers'
-import {InputComponent} from '../components'
-import {sendMessageCommand} from '../redux/actions'
+import { connect } from 'react-redux'
+import { OutputBox } from '../containers'
+import { InputComponent } from '../components'
+import { sendMessageCommand } from '../redux/actions'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import 'react-perfect-scrollbar/dist/css/styles.css';
 
@@ -20,9 +20,9 @@ const RootStyle = styled.div`
 `
 
 const MainBoxStyle = styled.div`
-    height:60%;
+    height:65%;
     width:65%;
-    margin:12% 0 0 0;
+    margin:10% 0 0 0;
     display:flex;
     flex-flow:column;
     justify-content:space-between;
@@ -39,22 +39,22 @@ const TypingBoxStyle = styled.div`
 `
 
 
-class Playground extends React.Component{
-    constructor(props){
+class Playground extends React.Component {
+    constructor(props) {
         super(props)
-    
+
         this.state = {
-            containerHeight:0
+
         }
     }
 
     handleScrollToBottom = (height) => {
-        if(this._scrollRef){
+        if (this._scrollRef) {
             this._scrollRef.scrollTop = height
         } else {
-            setTimeout((height)=>{
+            setTimeout((height) => {
                 this._scrollRef.scrollTop = height
-            },1,height)
+            }, 1, height)
         }
     }
 
@@ -62,7 +62,7 @@ class Playground extends React.Component{
         this.props.sendMessageCommand({ userMessage: command })
     }
 
-    render(){
+    render() {
 
         return (
             <RootStyle>
@@ -82,12 +82,13 @@ class Playground extends React.Component{
                             placeholder={'Type message here... '}
                             onSubmit={this.handleMessageSubmit}
                             stylePropsContainer={{
-                                borderRadius:'4px'
+                                borderRadius: '4px'
                             }}
                             stylePropsInput={{
-                                backgroundColor:'#1f1f1f',
-                                borderRadius:'4px',
-                                boxShadow: "0 2px 4px 4px rgba(0, 0, 0, 0.08)"
+                                backgroundColor: '#1f1f1f',
+                                borderRadius: '4px',
+                                boxShadow: "0 2px 4px 4px rgba(0, 0, 0, 0.08)",
+                                color: "#fff"
                             }}
                         />
                     </TypingBoxStyle>
@@ -97,8 +98,8 @@ class Playground extends React.Component{
     }
 }
 
-const mapStateToProps = ({messageStore}) => {
-    const { messages,processing,processingError } = messageStore
+const mapStateToProps = ({ messageStore }) => {
+    const { messages, processing, processingError } = messageStore
     return {
         messages, processing, processingError
     }

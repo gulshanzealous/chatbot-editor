@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Playground, Editor, Topbar } from '../containers'
+import { Playground, EditorContainer, Topbar } from '../containers'
 // import {connect} from 'react-redux'
 
 const RootStyle = styled.div`
@@ -47,7 +47,7 @@ class Layout extends React.Component{
                 </TopbarStyle>
                 <ContentContainerStyle>
                     <EditorContainerStyle>
-                        <Editor />
+                        <EditorContainer />
                     </EditorContainerStyle>
                     <PlaygroundContainerStyle>
                         <Playground />

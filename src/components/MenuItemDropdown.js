@@ -1,7 +1,7 @@
 import React from 'react'
-import styled, {css} from 'styled-components'
-import {MenuItemButton} from '../components'
- 
+import styled, { css } from 'styled-components'
+import { MenuItemButton } from '../components'
+
 const RootStyle = styled.div`
     height:100%;
     z-index:10;
@@ -22,6 +22,7 @@ const HeaderStyle = styled.div`
         border-width:0 1px 1px 1px;
         border-style:solid;
         border-color:rgba(255,255,255,0.09);
+        background-color:#161616;
         &:hover{
             background-color:#252525;
         }
@@ -42,11 +43,11 @@ const HeaderCaretStyle = styled.div`
     padding:0 0 10px 0;
 `
 
-class MenuItemDropdown extends React.Component{
-    constructor(props){
+class MenuItemDropdown extends React.Component {
+    constructor(props) {
         super(props)
         this.state = {
-            open:false
+            open: false
         }
     }
 
@@ -54,14 +55,14 @@ class MenuItemDropdown extends React.Component{
         return { open: !prevState.open }
     })
 
-    handleCloseDropdown = () => this.setState({ open:false })
+    handleCloseDropdown = () => this.setState({ open: false })
 
-    render(){
+    render() {
         return (
             <RootStyle style={{ ...this.props.styleProps }} onClick={this.handleClickDropdown} onMouseLeave={this.handleCloseDropdown} >
                 <HeaderStyle>
                     <HeaderImageStyle>
-                        <img src={this.props.headerImage} alt={'account'} style={{ display:'flex', height:'100%', width:'100%', borderRadius:'20px' }} />
+                        <img src={this.props.headerImage} alt={'account'} style={{ display: 'flex', height: '100%', width: '100%', borderRadius: '20px' }} />
                     </HeaderImageStyle>
                     <HeaderTextStyle>
                         {this.props.headerText}
@@ -74,16 +75,16 @@ class MenuItemDropdown extends React.Component{
                     this.state.open &&
                     this.props.subHeaders &&
                     this.props.subHeaders.length &&
-                    this.props.subHeaders.map((item,i) => (
+                    this.props.subHeaders.map((item, i) => (
                         <HeaderStyle key={i} isSubHeader={true} >
                             <MenuItemButton
-                                text={item.text} 
-                                onClick={item.onClick} 
-                                styleProps={{ 
+                                text={item.text}
+                                onClick={item.onClick}
+                                styleProps={{
                                     ...item.styleProps,
-
+                                    zIndex:20
                                 }}
-                                
+
                             />
                         </HeaderStyle>
                     ))
