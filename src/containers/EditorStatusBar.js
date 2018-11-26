@@ -26,7 +26,27 @@ class EditorStatusBar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isStatusBarHovering:false
+            isStatusBarHovering:false,
+            showSaveStatus: false
+        }
+    }
+
+    componentDidUpdate(prevProps){
+        const { tabs, activeTabIdentifier } = this.props
+        const focusedTab = tabs.find(t => t.identifier === activeTabIdentifier)
+        const lastSaveAgent = focusedTab.lastSave
+
+        if(this.props.tabs !== prevProps.tabs){
+            const isAutoSaved = lastSaveAgent === 'auto' ? true : false
+            if(isAutoSaved){
+                this.setState({
+                    showSaveStatus:true
+                },()=>{
+                    setTimeout((self)=>{
+                        self.setState({ showSaveStatus: false })
+                    },1500,this)
+                })
+            }
         }
     }
 
@@ -59,7 +79,10 @@ class EditorStatusBar extends React.Component {
 
     render() {
         const { tabs, activeTabIdentifier } = this.props
-        const savedChanges = tabs.find(t => t.identifier === activeTabIdentifier).saved
+        const focusedTab = tabs.find(t => t.identifier === activeTabIdentifier)
+        const isSaved = focusedTab.saved
+        // const lastSaveAgent = focusedTab.lastSave
+
         return (
             <RootStyle onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave} >
                 <TabsContainerStyle>
@@ -100,9 +123,17 @@ class EditorStatusBar extends React.Component {
                         }}
                     />
                 </TabsContainerStyle>
+                {
+                    this.state.showSaveStatus?
+                    <div style={{ fontSize:'0.8em', alignSelf:'center', opacity:'0.6', padding:'0 10px 0 0' }} >
+                        autosaved
+                    </div>
+                    :
+                    null
+                }
                 <ActionsContainerStyle>
                     {
-                        savedChanges?
+                        isSaved?
                         <IconButton
                             isActive={false}
                             text={'Sync Changes'}

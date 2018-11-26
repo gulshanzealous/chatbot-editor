@@ -3,13 +3,13 @@ import createHistory from 'history/createBrowserHistory';
 import {loadState,saveState} from './localStorage';
 import throttle from 'lodash/throttle'
 
-// import logger from 'redux-logger'
+import logger from 'redux-logger'
 import ReduxThunk from 'redux-thunk'
 
 import rootReducer from './reducers'
 
 const middlewares = [
-    // logger,
+    logger,
     ReduxThunk,
 ];
   

@@ -4,7 +4,7 @@ import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import accountImage from '../images/accountImage.jpg'
 import {MenuItemButton, MenuItemDropdown} from '../components'
-import {initiateLogout} from '../redux/actions'
+import {initiateLogout, notifyLoggedIn} from '../redux/actions'
 
 const RootStyle = styled.div`
     width:100%;
@@ -61,9 +61,12 @@ class Topbar extends React.Component{
         this.props.history.push('/credits')
     }
 
-    handleClickLogout = (e) => {
-        e.preventDefault()
-        this.props.initiateLogout()
+    handleClickAuth = (e) => {
+        // e.preventDefault()
+        if(this.props.loggedIn){
+            return this.props.initiateLogout()
+        }
+        this.props.notifyLoggedIn()
         // logout operation execution
         // this.props.history.push('/login')
     }
@@ -103,8 +106,8 @@ class Topbar extends React.Component{
                                 styleProps:{}
                             },
                             {
-                                text:'Logout',
-                                onClick:this.handleClickLogout,
+                                text:`${this.props.loggedIn? 'Logout' : 'Login'}`,
+                                onClick:this.handleClickAuth,
                                 styleProps:{}
                             }
 
@@ -117,10 +120,16 @@ class Topbar extends React.Component{
     }
 }
 
+
+const mapStateToProps = ({appStore}) => {
+    const {loggedIn} = appStore
+    return {loggedIn}
+}
+
 const mapActionsToProps = () => {
     return {
-        initiateLogout
+        initiateLogout, notifyLoggedIn
     }
 }
 
-export default withRouter(connect(null, mapActionsToProps())(Topbar))
+export default withRouter(connect(mapStateToProps, mapActionsToProps())(Topbar))

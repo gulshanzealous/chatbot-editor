@@ -83,8 +83,8 @@ class OutputBox extends React.Component {
         return (
             <RootStyle ref={this._containerRef}>
                 {
-                    this.props.messages &&
-                    this.props.messages.length &&
+                    !!this.props.messages &&
+                    !!this.props.messages.length &&
                     this.props.messages.map((msg, i) => {
                         const isBot = msg.agent === 'bot'
                         return (

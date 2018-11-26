@@ -1,7 +1,6 @@
 var Utf8 = require("crypto-js/enc-utf8")
 var AES = require("crypto-js/aes");
 
-
 export const saveState = (store) => {
 
     try {

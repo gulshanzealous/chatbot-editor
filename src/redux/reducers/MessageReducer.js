@@ -2,7 +2,8 @@
 
 import {
     EXECUTE_COMMAND_START,EXECUTE_COMMAND_SUCCESS,EXECUTE_COMMAND_FAIL, 
-    LOGOUT_SUCCESS
+    LOGOUT_SUCCESS,
+    LOGIN_SUCCESS
 } from '../types'
 
 
@@ -73,8 +74,11 @@ const handler = {
     [EXECUTE_COMMAND_FAIL] : (state,action) => {
         return { ...state, processingError: action.payload.error, processing: false }
     },
-    [LOGOUT_SUCCESS] : () => {
+    [LOGIN_SUCCESS]: () => {
         return INITIAL_STATE
+    },
+    [LOGOUT_SUCCESS] : () => {
+        return { ...INITIAL_STATE, messages:[] }
     }
 }
 

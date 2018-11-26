@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import MonacoEditor from 'react-monaco-editor';
-
+import throttle from 'lodash/throttle'
 
 const RootStyle = styled.div`
     width:100%;
@@ -9,7 +9,6 @@ const RootStyle = styled.div`
     display:flex;
     margin:15px 0 0 0;
 `
-
 
 class Editor extends React.Component {
     constructor(props) {
@@ -23,11 +22,41 @@ class Editor extends React.Component {
 
     componentDidMount() {
         this.resizeEditor()
-        window.addEventListener("resize", this.resizeEditor);
+        window.addEventListener("resize", this.resizeEditor)
+    }
+
+    editorDidMount = (editor, monaco) => {
+        editor.setValue(this.props.code)
+        this.props.setMonacoRef({ editorRef: editor })
+        this.startAutosave(15000)
+        editor.focus()
+    }
+
+    startAutosave = (timeInMs) => {
+        this.backgroundSaveTimer = setInterval((callback) => {
+            callback()
+        }, timeInMs, this.props.onSaveChanges)
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.loggedIn === false && prevProps.loggedIn === true) {
+            clearInterval(this.backgroundSaveTimer)
+            this.props.editorRef.setValue("")
+        }
+        if (this.props.loggedIn === true && prevProps.loggedIn === false) {
+            this.props.editorRef.setValue(this.props.code)
+            if (!this.backgroundSaveTimer) {
+                this.startAutosave(5000)
+            }
+        }
+        if (this.props.identifier !== prevProps.identifier) {
+            this.props.editorRef.setValue(this.props.code)
+        }
     }
 
     componentWillUnmount() {
-        window.removeEventListener("resize");
+        clearInterval(this.backgroundSaveTimer)
+        window.removeEventListener("resize", this.resizeEditor);
     }
 
     resizeEditor = () => {
@@ -47,37 +76,29 @@ class Editor extends React.Component {
         return { editorHeight, editorWidth }
     }
 
-    editorDidMount = (editor, monaco) => {
-        this.props.setMonacoRef({ editorRef: monaco, tabIdentifier: this.props.identifier })
-        editor.focus();
-    }
-
-    handleChange = (newCode, e) => {
-        this.props.setEditorValue({ newCode, tabIdentifier: this.props.identifier })
-    }
+    handleChange = throttle((newCode, e) => {
+        if (this.props.code !== newCode) {
+            this.props.onDirtyState({ tabIdentifier: this.props.identifier, isSaved: false })
+        }
+    }, 1000)
 
     render() {
-        const { code, options } = this.props
+        const { options } = this.props
         const { editorHeight, editorWidth } = this.state
         return (
             <RootStyle ref={this._containerRef} id="container" >
                 <MonacoEditor
-
                     width={editorWidth}
                     height={editorHeight}
                     language="javascript"
                     theme="vs-dark"
-                    value={code}
+                    // defaultValue={code}
                     options={{
                         selectOnLineNumbers: true,
                         minimap: {
                             enabled: false
                         },
                         language: "javascript",
-                        suggest: {
-                            filterGraceful: true,
-                            localityBonus: true
-                        },
                         wordBasedSuggestions: true,
                         snippetSuggestions: true,
                         ...options
@@ -86,8 +107,7 @@ class Editor extends React.Component {
                     editorDidMount={this.editorDidMount}
                 />
             </RootStyle>
-
-        );
+        )
     }
 }
 

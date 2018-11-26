@@ -60,7 +60,8 @@ class Playground extends React.Component {
 
     handleMessageSubmit = ({ command }) => {
         const editorCode = this.props.tabs && this.props.tabs[0].src
-        this.props.sendMessageCommand({ userMessage: command, sourceCode: editorCode })
+        const notificationCreator = this.props.notificationCreator
+        this.props.sendMessageCommand({ userMessage: command, sourceCode: editorCode, notificationCreator })
     }
 
     render() {

@@ -1,7 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
+import { connect } from 'react-redux'
 import { Playground, EditorContainer, Topbar } from '../containers'
-// import {connect} from 'react-redux'
+import NotificationSetup from '../config/NotificationSetup'
 
 const RootStyle = styled.div`
     display:flex;
@@ -31,41 +32,53 @@ const PlaygroundContainerStyle = styled.div`
 `
 
 
-class Layout extends React.Component{
-    constructor(props){
+class Layout extends React.Component {
+    constructor(props) {
         super(props)
-        this.state = {
 
+        this.state = {
+            notificationCreator:null
         }
     }
 
-    render(){
+    saveNotificationHandler = (notificationCreator) => {
+        this.setState({ notificationCreator })
+    }
+
+
+    render() {
+        const { notificationCreator } = this.state
         return (
             <RootStyle>
+
                 <TopbarStyle>
-                    <Topbar />
+                    <Topbar notificationCreator = {notificationCreator} />
                 </TopbarStyle>
+
                 <ContentContainerStyle>
                     <EditorContainerStyle>
-                        <EditorContainer />
+                        <EditorContainer notificationCreator={notificationCreator} />
                     </EditorContainerStyle>
                     <PlaygroundContainerStyle>
-                        <Playground />
+                        <Playground notificationCreator={notificationCreator} />
                     </PlaygroundContainerStyle>
                 </ContentContainerStyle>
+
+                <NotificationSetup sendNotificationCreator={this.saveNotificationHandler} />
+
             </RootStyle>
         )
     }
 }
 
-// const mapStateToProps = (store) => {
+const mapStateToProps = (store) => {
+    return {}
+}
 
-// }
+const mapActionsToProps = () => {
+    return {
+        
+    }
+}
 
-// const mapActionsToProps = () => {
-//     return {}
-// }
-
-// export default connect(Layout)(mapStateToProps, mapActionsToProps())
-
-export default Layout
+export default connect(mapStateToProps, mapActionsToProps())(Layout)

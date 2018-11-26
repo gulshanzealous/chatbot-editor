@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import * as monaco from 'monaco-editor';
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import { Editor, EditorStatusBar } from '../containers'
-import {addTabToEditor, removeTabFromEditor, focusOnTabInEditor, saveRefToEditor, saveCodeToEditor, saveChanges} from '../redux/actions'
+import { addTabToEditor, removeTabFromEditor, focusOnTabInEditor, autoSaveCodeToEditor, saveChanges, sendTabSaveState } from '../redux/actions'
 
 const RootStyle = styled.div`
     width:100%;
@@ -30,9 +30,10 @@ class EditorContainer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            editorRef: {}
         }
     }
+
 
     handleAddTab = () => {
         this.props.addTabToEditor()
@@ -43,28 +44,42 @@ class EditorContainer extends React.Component {
     }
 
     handleFocusTab = ({ tabIdentifier }) => {
+        this.handleSaveChangesAuto()
         this.props.focusOnTabInEditor({ tabIdentifier })
     }
 
-    handleEditorRef = ({ editorRef, tabIdentifier }) => {
-        // this.props.saveRefToEditor({ tabIdentifier, editorRef }) 
+    handleEditorRef = ({ editorRef }) => {
+        this.setState({
+            editorRef
+        })
     }
 
-    handleEditorChange = ({ newCode, tabIdentifier }) => {
-        this.props.saveCodeToEditor({ tabIdentifier, newCode })
+    notifyTabSaveState = ({ tabIdentifier, isSaved }) => {
+        this.props.sendTabSaveState({ tabIdentifier, isSaved: false })
     }
 
-    handleSaveChanges = () => {
-        this.props.saveChanges({ tabIdentifier: this.props.activeTabIdentifier })
+    handleSaveChangesAuto = () => {
+        const { activeTabIdentifier } = this.props
+        const { editorRef } = this.state
+
+        const liveValue = editorRef.getValue()
+        this.props.autoSaveCodeToEditor({ tabIdentifier: activeTabIdentifier, newCode: liveValue })
+    }
+
+    handleSaveChangesManual = () => {
+        const { activeTabIdentifier } = this.props
+        const { editorRef } = this.state
+
+        const liveValue = editorRef.getValue()
+        this.props.saveChanges({ tabIdentifier: activeTabIdentifier, newCode: liveValue })
     }
 
     render() {
-        const { tabs, activeTabIdentifier } = this.props
+        const { tabs, activeTabIdentifier, loggedIn } = this.props
         const tabsLite = tabs.map(x => {
-            return { identifier: x.identifier, title: x.title, saved: x.saved }
+            return { identifier: x.identifier, title: x.title, saved: x.saved, lastSave: x.lastSave }
         })
         const activeEditor = tabs.find(t => t.identifier === activeTabIdentifier)
-
         return (
             <RootStyle>
                 <TabContainerStyle>
@@ -74,7 +89,7 @@ class EditorContainer extends React.Component {
                         onAddTab={this.handleAddTab}
                         onCloseTab={this.handleCloseTab}
                         onFocusTab={this.handleFocusTab}
-                        onSaveChanges={this.handleSaveChanges}
+                        onSaveChanges={this.handleSaveChangesManual}
                     />
                 </TabContainerStyle>
                 <EditorContainerStyle>
@@ -85,9 +100,12 @@ class EditorContainer extends React.Component {
                             height="100%"
                             code={activeEditor.src}
                             options={{}}
+                            loggedIn={loggedIn}
                             identifier={activeEditor.identifier}
-                            setEditorValue={this.handleEditorChange}
+                            editorRef={this.state.editorRef}
                             setMonacoRef={this.handleEditorRef}
+                            onDirtyState={this.notifyTabSaveState}
+                            onSaveChanges={this.handleSaveChangesAuto}
                         />
                     }
                 </EditorContainerStyle>
@@ -97,16 +115,18 @@ class EditorContainer extends React.Component {
     }
 }
 
-const mapStateToProps = ({ editorStore }) => {
-    const { tabs, activeTabIdentifier } = editorStore
+const mapStateToProps = ({ editorStore, appStore }) => {
+    const { tabs, activeTabIdentifier, editorRef } = editorStore
+    const { loggedIn } = appStore
     return {
-        tabs, activeTabIdentifier
+        tabs, activeTabIdentifier, editorRef,
+        loggedIn
     }
 }
 
 const mapActionsToProps = () => {
     return {
-        addTabToEditor, removeTabFromEditor, focusOnTabInEditor, saveRefToEditor, saveCodeToEditor, saveChanges
+        addTabToEditor, removeTabFromEditor, focusOnTabInEditor, autoSaveCodeToEditor, saveChanges, sendTabSaveState
     }
 }
 

@@ -1,8 +1,7 @@
-import React from 'react'
 
 import {
     EDITOR_TAB_ADD, EDITOR_TAB_CLOSE, EDITOR_TAB_FOCUS,
-    EDITOR_SAVE_REF, EDITOR_SAVE_CODE, EDITOR_SAVE_CHANGES,
+    EDITOR_NOTIFY_UNSAVED, EDITOR_SAVE_CHANGES,
     LOGOUT_SUCCESS
 } from '../types'
 
@@ -29,18 +28,17 @@ const INITIAL_STATE = {
             identifier: 0,
             title: 'main.js',
             src: mainJsBoilerCode,
+            lastSave:'auto',
             saved:true,
-            ref: React.createRef()
         },
         {
             identifier: 1,
-            title: 'app.js',
+            title: 'setup.js',
             src: newTabBoilerCode,
+            lastSave:'auto',
             saved:true,
-            ref: React.createRef()
         },
     ],
-    tabRefs:[],
     activeTabIdentifier: 0
 }
 
@@ -53,9 +51,10 @@ const handler = {
                 ...state.tabs,
                 {
                     identifier: tabIdentifier,
-                    title: 'file.js',
+                    title: `file${state.tabs.length-1}.js`,
                     src:newTabBoilerCode,
-                    ref: React.createRef()
+                    lastSave:'auto',
+                    saved:true,
                 }
             ],
             activeTabIdentifier: tabIdentifier
@@ -82,37 +81,26 @@ const handler = {
             activeTabIdentifier: action.payload.tabIdentifier
         }
     },
-    [EDITOR_SAVE_REF] : (state,action) => {
-        const {tabIdentifier, editorRef} = action.payload
+    [EDITOR_NOTIFY_UNSAVED] : (state,action) => {
+        const {isSaved, tabIdentifier} = action.payload
         return {
             ...state,
             tabs: state.tabs.map(tab => {
                 if(tab.identifier === tabIdentifier){
-                    return { ...tab, ref: editorRef }
-                }
-                return tab
-            })
-        }
-    },
-    [EDITOR_SAVE_CODE] : (state,action) => {
-        const {tabIdentifier, newCode} = action.payload
-        return {
-            ...state,
-            tabs: state.tabs.map(tab => {
-                if(tab.identifier === tabIdentifier){
-                    return { ...tab, src: newCode, saved: false }
+                    return { ...tab, saved: isSaved }
                 }
                 return tab
             })
         }
     },
     [EDITOR_SAVE_CHANGES] : (state,action) => {
-        const {tabIdentifier} = action.payload
+        const {tabIdentifier, newCode, lastSave} = action.payload
+
         return {
             ...state,
             tabs: state.tabs.map(tab => {
                 if(tab.identifier === tabIdentifier){
-                    return { ...tab, saved: true }
+                    return { ...tab, src: newCode ,saved: true, lastSave }
                 }
                 return tab
             })
@@ -129,5 +117,5 @@ export default (state=INITIAL_STATE,action) => {
         return handler[action.type](state,action)
     }
     return state
-} 
+}
 
