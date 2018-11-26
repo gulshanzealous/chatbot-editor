@@ -1,13 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import MonacoEditor from 'react-monaco-editor';
-// import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
-// // if shipping only a subset of the features & languages is desired
-
-// monaco.editor.create(document.getElementById('container'), {
-//     value: 'console.log("Hello, world")',
-//     language: 'javascript'
-// });
 
 
 const RootStyle = styled.div`
@@ -55,27 +48,21 @@ class Editor extends React.Component {
     }
 
     editorDidMount = (editor, monaco) => {
-        this.props.setMonacoRef({ editorRef: monaco, identifier: this.props.identifier })
+        this.props.setMonacoRef({ editorRef: monaco, tabIdentifier: this.props.identifier })
         editor.focus();
     }
 
-    handleChange = (newValue, e) => {
-        this.props.setEditorValue({ newValue, identifier: this.props.identifier })
+    handleChange = (newCode, e) => {
+        this.props.setEditorValue({ newCode, tabIdentifier: this.props.identifier })
     }
 
     render() {
         const { code, options } = this.props
-        // let editorHeight = height
-        // let editorWidth = width
-        // if(this._containerRef){
-        //     editorHeight = this._containerRef.clientHeight ? this._containerRef.clientHeight : editorHeight
-        //     editorWidth = this._containerRef.clientWidth ? this._containerRef.clientWidth : editorWidth
-        // }
         const { editorHeight, editorWidth } = this.state
-        console.log(code)
         return (
             <RootStyle ref={this._containerRef} id="container" >
                 <MonacoEditor
+
                     width={editorWidth}
                     height={editorHeight}
                     language="javascript"

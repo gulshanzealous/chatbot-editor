@@ -59,7 +59,8 @@ class Playground extends React.Component {
     }
 
     handleMessageSubmit = ({ command }) => {
-        this.props.sendMessageCommand({ userMessage: command })
+        const editorCode = this.props.tabs && this.props.tabs[0].src
+        this.props.sendMessageCommand({ userMessage: command, sourceCode: editorCode })
     }
 
     render() {
@@ -98,10 +99,11 @@ class Playground extends React.Component {
     }
 }
 
-const mapStateToProps = ({ messageStore }) => {
+const mapStateToProps = ({ messageStore, editorStore }) => {
     const { messages, processing, processingError } = messageStore
+    const { tabs, activeTabIdentifier } = editorStore
     return {
-        messages, processing, processingError
+        messages, processing, processingError, tabs, activeTabIdentifier
     }
 }
 

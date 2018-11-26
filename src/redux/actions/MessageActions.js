@@ -2,8 +2,10 @@ import {
     EXECUTE_COMMAND_START,EXECUTE_COMMAND_SUCCESS,EXECUTE_COMMAND_FAIL, 
 } from '../types'
 
+var safeEval = require('safe-eval')
 
-export const sendMessageCommand = ({ userMessage }) => {
+
+export const sendMessageCommand = ({ userMessage, sourceCode }) => {
     return async(dispatch) => {
         try{
             dispatch({
@@ -22,18 +24,22 @@ export const sendMessageCommand = ({ userMessage }) => {
             })
 
             // query an api or execute something here
+
             setTimeout(()=>{
+                const evaluated = safeEval(sourceCode)
+                const resp = evaluated(userMessage)
+                console.log(resp)
                 dispatch({
                     type:EXECUTE_COMMAND_SUCCESS,
                     payload:{
                         message:{
-                            messageText:"I'm offline right now.Sorry!",
+                            messageText: resp,
                             agent:'bot'
                         },
                         processing:false
                     },
                 })
-            },2000)
+            },1000)
 
         } catch(e){
             console.log(e)

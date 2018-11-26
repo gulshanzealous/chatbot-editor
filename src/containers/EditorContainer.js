@@ -1,6 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
+import * as monaco from 'monaco-editor';
+import {connect} from 'react-redux'
 import { Editor, EditorStatusBar } from '../containers'
+import {addTabToEditor, removeTabFromEditor, focusOnTabInEditor, saveRefToEditor, saveCodeToEditor, saveChanges} from '../redux/actions'
 
 const RootStyle = styled.div`
     width:100%;
@@ -23,126 +26,42 @@ const EditorContainerStyle = styled.div`
     width:100%;
 `
 
-const mainJsBoilerCode = `
-/* This is the starting point for your project.
-* Start adding code here. Have fun. 
-*/
-
-function processMessage(message){
-    // call an API or do some programming chops and return a 'AI' reply
-
-    return "I'm offline right now.Sorry!"
-}
-`
-
-const newTabBoilerCode = `
-/* This is an empty Tab. 
-* You can write code here if you want.
-*/
-`
-
 class EditorContainer extends React.Component {
     constructor(props) {
         super(props);
-        this._monacoRef = React.createRef()
         this.state = {
-            tabs: [
-                {
-                    identifier: 0,
-                    title: 'main.js',
-                    src: mainJsBoilerCode,
-                    ref: React.createRef()
-                },
-                {
-                    identifier: 1,
-                    title: 'app.js',
-                    src: newTabBoilerCode,
-                    ref: React.createRef()
-                },
 
-            ],
-            activeTabIdentifier: 0
         }
     }
 
     handleAddTab = () => {
-        // this._monacoRef.create({
-        //     language:"javascript"
-        // });
-        this.setState(prevState => {
-            const newId = Date.now()
-            return {
-                tabs: [
-                    ...prevState.tabs,
-                    {
-                        identifier: newId,
-                        title: 'file.js',
-                        src:newTabBoilerCode,
-                        ref: React.createRef()
-                    }
-                ],
-                activeTabIdentifier: newId
-            }
-        })
-
-        // this._monacoRef.createModel(
-        //     'model.js',
-        //     'javascript'
-        // )
+        this.props.addTabToEditor()
     }
 
     handleCloseTab = ({ tabIdentifier }) => {
-        const tabIndex = this.state.tabs.findIndex(t => t.identifier === tabIdentifier)
-        if (tabIndex < 0) {
-            return
-        }
-        const prevTabId = this.state.tabs[tabIndex - 1].identifier
-        const newActiveTabId = this.state.activeTabIdentifier === tabIdentifier ? prevTabId : this.state.activeTabIdentifier
-
-        this.setState({
-            tabs: this.state.tabs.filter(x => x.identifier !== tabIdentifier),
-            activeTabIdentifier: newActiveTabId
-        })
+        this.props.removeTabFromEditor({ tabIdentifier })
     }
 
     handleFocusTab = ({ tabIdentifier }) => {
-        this.setState({
-            activeTabIdentifier: tabIdentifier
-        })
+        this.props.focusOnTabInEditor({ tabIdentifier })
     }
 
-    handleEditorRef = ({ editorRef, identifier }) => {
-        console.log(editorRef)
-
-        this.setState(prevState => {
-            return {
-                tabs: prevState.tabs.map(tab => {
-                    if(tab.identifier === identifier){
-                        return { ...tab, ref: editorRef }
-                    }
-                    return tab
-                })
-            }
-        })
+    handleEditorRef = ({ editorRef, tabIdentifier }) => {
+        // this.props.saveRefToEditor({ tabIdentifier, editorRef }) 
     }
 
-    handleEditorChange = ({ newValue, identifier }) => {
-        this.setState(prevState => {
-            return {
-                tabs: prevState.tabs.map(tab => {
-                    if(tab.identifier === identifier){
-                        return { ...tab, src: newValue }
-                    }
-                    return tab
-                })
-            }
-        })
+    handleEditorChange = ({ newCode, tabIdentifier }) => {
+        this.props.saveCodeToEditor({ tabIdentifier, newCode })
+    }
+
+    handleSaveChanges = () => {
+        this.props.saveChanges({ tabIdentifier: this.props.activeTabIdentifier })
     }
 
     render() {
-        const { tabs, activeTabIdentifier } = this.state
+        const { tabs, activeTabIdentifier } = this.props
         const tabsLite = tabs.map(x => {
-            return { identifier: x.identifier, title: x.title }
+            return { identifier: x.identifier, title: x.title, saved: x.saved }
         })
         const activeEditor = tabs.find(t => t.identifier === activeTabIdentifier)
 
@@ -155,6 +74,7 @@ class EditorContainer extends React.Component {
                         onAddTab={this.handleAddTab}
                         onCloseTab={this.handleCloseTab}
                         onFocusTab={this.handleFocusTab}
+                        onSaveChanges={this.handleSaveChanges}
                     />
                 </TabContainerStyle>
                 <EditorContainerStyle>
@@ -170,7 +90,6 @@ class EditorContainer extends React.Component {
                             setMonacoRef={this.handleEditorRef}
                         />
                     }
-
                 </EditorContainerStyle>
             </RootStyle>
 
@@ -178,4 +97,17 @@ class EditorContainer extends React.Component {
     }
 }
 
-export default EditorContainer
+const mapStateToProps = ({ editorStore }) => {
+    const { tabs, activeTabIdentifier } = editorStore
+    return {
+        tabs, activeTabIdentifier
+    }
+}
+
+const mapActionsToProps = () => {
+    return {
+        addTabToEditor, removeTabFromEditor, focusOnTabInEditor, saveRefToEditor, saveCodeToEditor, saveChanges
+    }
+}
+
+export default connect(mapStateToProps, mapActionsToProps())(EditorContainer)

@@ -1,8 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 import {withRouter} from 'react-router-dom'
+import {connect} from 'react-redux'
 import accountImage from '../images/accountImage.jpg'
 import {MenuItemButton, MenuItemDropdown} from '../components'
+import {initiateLogout} from '../redux/actions'
 
 const RootStyle = styled.div`
     width:100%;
@@ -61,8 +63,9 @@ class Topbar extends React.Component{
 
     handleClickLogout = (e) => {
         e.preventDefault()
+        this.props.initiateLogout()
         // logout operation execution
-        this.props.history.push('/login')
+        // this.props.history.push('/login')
     }
 
     render(){
@@ -114,4 +117,10 @@ class Topbar extends React.Component{
     }
 }
 
-export default withRouter(Topbar)
+const mapActionsToProps = () => {
+    return {
+        initiateLogout
+    }
+}
+
+export default withRouter(connect(null, mapActionsToProps())(Topbar))

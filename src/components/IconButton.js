@@ -26,10 +26,17 @@ class IconButton extends React.Component {
         }
     }
 
+    handleClick = (e) => {
+        e.preventDefault()
+        this.props.onClick && this.props.onClick()
+    }
+
     render() {
         const icon = this.props.icon === 'refresh' ? null : this.props.icon
         return (
-            <RootStyle style={{ ...this.props.styleProps }} isActive={this.props.isActive} >
+            <RootStyle style={{ ...this.props.styleProps }} isActive={this.props.isActive} 
+                onClick={this.handleClick}
+            >
                 {
                     icon?
                     <IconContainer>

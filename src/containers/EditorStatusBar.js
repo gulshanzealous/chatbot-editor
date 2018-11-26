@@ -53,8 +53,13 @@ class EditorStatusBar extends React.Component {
         })
     }
 
+    handleActionButtonClick = () => {
+        this.props.onSaveChanges()
+    }
+
     render() {
-        const { tabs, activeTabIdentifier, isFocusedTabUnsaved } = this.props
+        const { tabs, activeTabIdentifier } = this.props
+        const savedChanges = tabs.find(t => t.identifier === activeTabIdentifier).saved
         return (
             <RootStyle onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave} >
                 <TabsContainerStyle>
@@ -97,26 +102,28 @@ class EditorStatusBar extends React.Component {
                 </TabsContainerStyle>
                 <ActionsContainerStyle>
                     {
-                        isFocusedTabUnsaved || "isFocusedTabUnsaved"?
-                        <IconButton 
-                            isActive={true}
-                            text={'Apply Changes'}
-                            icon={'refresh'}
-                            styleProps={{
-                                backgroundColor:"#447",
-                                color:"#fff",
-                                cursor:"pointer"
-                            }}
-                        />
-                        :
+                        savedChanges?
                         <IconButton
                             isActive={false}
-                            text={'Apply Changes'}
+                            text={'Sync Changes'}
                             icon={'refresh'}
+                            onClick={null}
                             styleProps={{
                                 backgroundColor:"#282828",
                                 color:"#fff",
                                 opacity:'0.6'
+                            }}
+                        />
+                        :
+                        <IconButton 
+                            isActive={true}
+                            text={'Sync Changes'}
+                            icon={'refresh'}
+                            onClick={this.handleActionButtonClick}
+                            styleProps={{
+                                backgroundColor:"#447",
+                                color:"#fff",
+                                cursor:"pointer"
                             }}
                         />
                     }
