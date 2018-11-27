@@ -7,6 +7,12 @@ const uuid = require('uuid/v4')
 
 var safeEval = require('safe-eval')
 
+const CampK12 = {
+    echo : (word) => {
+        return `I echo words : ${word}`
+    }
+}
+
 
 export const sendMessageCommand = ({ userMessage, sourceCode, notificationCreator }) => {
     return async (dispatch) => {
@@ -34,7 +40,8 @@ export const sendMessageCommand = ({ userMessage, sourceCode, notificationCreato
                         process: process,
                         Window: Window,
                         fetch: function () { return fetch },
-                        axios: axios
+                        axios: axios,
+                        CampK12: CampK12
                     }
                     const evaluated = safeEval(sourceCode, context)
                     console.log(evaluated)

@@ -5,6 +5,8 @@ import botImage from '../images/bot.png'
 import loaderGif from '../images/loader.gif'
 
 const RootStyle = styled.div`
+    align-self:center;
+    max-width:100%;
     border-radius:4px;
     display:flex;
     flex-direction: column;
@@ -34,6 +36,7 @@ const ImageStyle = styled.img`
 const MessageStyle = styled.div`
     display:flex;
     padding:0 15px;
+    /* max-width:50%; */
 
     flex-flow:row wrap;
     align-items:center;

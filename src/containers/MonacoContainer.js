@@ -8,7 +8,9 @@ const uuid = require('uuid/v1')
 
 const RootStyle = styled.div`
     width:100%;
-    height:100%;
+    /* min-width:700px !important; */
+    height:95vh;
+    flex:1 1 700px !important;
     display:flex;
     flex-flow: column nowrap;
     justify-content:center;
@@ -30,7 +32,7 @@ const EditorStyle = styled.div`
     overflow-y:hidden;
 `
 
-class MonacoContainer extends React.Component {
+class MonacoContainer extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -107,12 +109,15 @@ class MonacoContainer extends React.Component {
         const model =  monaco.editor.createModel(value, language, path)
         this.handleNewModel({ tabIdentifier: newId, model: model.id })
 
-        this.setState({
-            modelReferences: [...this.state.modelReferences, { model: model, id: model.id }]
+        this.setState(prevState => {
+            return {
+                modelReferences: [...prevState.modelReferences, { model: model, id: model.id }]
+            }
         })
     }
 
     handleCloseTab = ({ tabIdentifier }) => {
+        this.props.focusOnTabInEditor({ tabIdentifier })
         this.props.removeTabFromEditor({ tabIdentifier })
 
         const relevantTab = this.props.tabs.find(t => t.identifier === tabIdentifier)
@@ -124,8 +129,10 @@ class MonacoContainer extends React.Component {
             }
             this._editor.getModel(activeModelFound.model).dispose();
 
-            this.setState({
-                modelReferences: this.state.modelReferences.filter(x => x.id !== relevantTab.modelId)
+            this.setState(prevState => {
+                return {
+                    modelReferences: prevState.modelReferences.filter(x => x.id !== relevantTab.modelId)
+                }
             })
         }
 
@@ -171,7 +178,10 @@ class MonacoContainer extends React.Component {
             const modelFound = this.state.modelReferences.find(t => t.id === activeTab.modelId)
             if(modelFound){
                 activeModel = modelFound.model
-                this._editor.setModel(activeModel)
+                console.log(activeModel)
+                if(activeModel){
+                    this._editor.setModel(activeModel)
+                }
             }
         }
         // console.log(activeTab.src)

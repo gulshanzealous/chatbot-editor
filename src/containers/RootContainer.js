@@ -11,8 +11,6 @@ const RootStyle = styled.div`
     color:#fff;
     width:100%;
     height:100vh;
-    overflow-x:hidden;
-    overflow-y:hidden;
 `
 
 const TopbarStyle = styled.div`
@@ -22,19 +20,22 @@ const TopbarStyle = styled.div`
 const ContentContainerStyle = styled.div`
     width:100%;
     height:100%;
-    display:flex;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    grid-template-rows:1fr;
 `
 
 const EditorContainerStyle = styled.div`
-    flex:0 0 46%;
+    grid-column: 1/2 !important;
+    grid-row:1/2;
     display:flex;
-    /* max-width:100%; */
 `
 
 const PlaygroundContainerStyle = styled.div`
-    /* flex:0 0 50%; */
+    grid-column:2/3 ;
+    grid-row:1/2;
     display:flex;
-    max-width:54%;
+    /* max-width:50% !important; */
 
 `
 

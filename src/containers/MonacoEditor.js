@@ -9,7 +9,7 @@ const RootStyle = styled.div`
 `
 
 
-class MonacoEditor extends React.Component {
+class MonacoEditor extends React.PureComponent {
 
 
     componentDidMount() {
