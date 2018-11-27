@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import * as monaco from 'monaco-editor';
 
 const RootStyle = styled.div`
     flex: 1 1 0%;
@@ -24,19 +23,34 @@ class MonacoEditor extends React.PureComponent {
     componentDidUpdate(prevProps){
         if(this.props._model !== prevProps._model && this.props._model && this.props._editor){
             const model = this.props._model
-            // console.log(model)
-            // console.log(this.props)
-            // console.log(this.props._editor)
             this.updateCode()
 
+            this.startAutosave(15000)
+
             this._subscription = model.onDidChangeContent(() => {
-                this.props.onValueChange(model.getValue());
+                this.props.notifyChange({ tabIdentifier: this.props.identifier })
+                // this.props.sendTabSaveState(model.getValue());
             });
         }
 
         if(this.props.value !== prevProps.value && this.props._model && this.props._editor){
             this.updateCode()
         }
+
+        if (this.props.loggedIn === false && prevProps.loggedIn === true) {
+            clearInterval(this.backgroundSaveTimer)
+        }
+        if (this.props.loggedIn === true && prevProps.loggedIn === false) {
+            if (!this.backgroundSaveTimer) {
+                this.startAutosave(15000)
+            }
+        }
+    }
+
+    startAutosave = (timeInMs) => {
+        this.backgroundSaveTimer = setInterval((model,callback) => {
+            callback(model.getValue())
+        }, timeInMs,this.props._model ,this.props.onValueChange)
     }
 
     updateCode = () => {
@@ -71,7 +85,10 @@ class MonacoEditor extends React.PureComponent {
         // window.removeEventListener("resize", this.resizeEditor);
     }
 
+
+
     render() {
+        // console.log(this.props.value)
         return (
             <RootStyle  ref={c => this._node = c} 
             />

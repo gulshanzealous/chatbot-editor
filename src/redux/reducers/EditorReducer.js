@@ -2,7 +2,7 @@
 import {
     EDITOR_TAB_ADD, EDITOR_TAB_CLOSE, EDITOR_TAB_FOCUS,
     EDITOR_NOTIFY_UNSAVED, EDITOR_SAVE_CHANGES, SAVE_NEW_MODEL,
-    LOGOUT_SUCCESS
+    LOGOUT_SUCCESS, LOGIN_SUCCESS
 } from '../types'
 
 const mainJsBoilerCode = `
@@ -12,13 +12,17 @@ const mainJsBoilerCode = `
 
 async function processMessage(message){
     // call an API or do some programming chops and return a 'AI' reply
+    // The Chatbot API provides some functions like echo that you can use.
+    // More Chatbot functions coming soon
+    // You also get axios for API calls
+    // More in Docs
 
     const res = await axios.get("https://reqres.in/api/users/1")
     const name = res.data.data.first_name
     const response = "Hi! I am "+ name
 
-    return CampK12.echo(response)
-    
+    return Chatbot.echo(response)
+
     // return "I'm offline right now.Sorry!"
 }
 `
@@ -78,6 +82,10 @@ const handler = {
                     src:newTabBoilerCode,
                     lastSave:'auto',
                     saved:true,
+                    modelIdOptions:{
+                        language:'javascript',
+                        path:''
+                    }
                 }
             ],
             activeTabIdentifier: tabIdentifier
@@ -141,8 +149,16 @@ const handler = {
             })
         }
     },
-    [LOGOUT_SUCCESS] : () => {
+    [LOGIN_SUCCESS] : () => {
         return INITIAL_STATE
+    },
+    [LOGOUT_SUCCESS] : (state) => {
+        return {
+            ...INITIAL_STATE,
+            tabs: state.tabs.map(tab => {
+                return { ...tab, src:'' }
+            })
+        }
     }
 }
 

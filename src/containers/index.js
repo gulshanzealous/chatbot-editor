@@ -11,3 +11,10 @@ import RootContainer from './RootContainer'
 import Topbar from './Topbar'
 
 export {Editor, EditorContainer, EditorStatusBar, MonacoContainer, MonacoEditor, OutputBox, Playground, RootContainer, Topbar}
+
+// v1 editors
+// EditorContainer, Editor
+
+// v2 editors : support namespacing
+// MonacoContainer, MonacoEditor
+

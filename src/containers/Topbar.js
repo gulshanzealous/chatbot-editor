@@ -43,22 +43,22 @@ class Topbar extends React.Component{
 
     handleClickLearn = (e) => {
         e.preventDefault()
-        this.props.history.push('/learn-ai')
+        // this.props.history.push('/learn-to-code')
     }
 
     handleClickDocs = (e) => {
         e.preventDefault()
-        this.props.history.push('/docs')
+        // this.props.history.push('/docs')
     }
 
     handleClickCoins = (e) => {
         e.preventDefault()
-        this.props.history.push('/coins')
+        // this.props.history.push('/coins')
     }
 
     handleClickCredits = (e) => {
         e.preventDefault()
-        this.props.history.push('/credits')
+        // this.props.history.push('/credits')
     }
 
     handleClickAuth = (e) => {
@@ -75,11 +75,11 @@ class Topbar extends React.Component{
         return (
             <RootStyle>
                 <HeadingStyle>
-                    AI Playground
+                    Chatbot Playground
                 </HeadingStyle>
                 <MenuContainerStyle>
                     <MenuItemButton 
-                        text={'Learn AI'} 
+                        text={'Learn Chatbots'} 
                         onClick={this.handleClickLearn}
                         styleProps={{}}
                     />

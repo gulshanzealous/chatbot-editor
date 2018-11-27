@@ -153,38 +153,40 @@ class MonacoContainer extends React.PureComponent {
         this.props.focusOnTabInEditor({ tabIdentifier })
     }
 
+    notifyTabSaveState = ({ tabIdentifier }) => {
+        this.props.sendTabSaveState({ tabIdentifier, isSaved: false })
+    }
+
     handleSaveChangesAuto = (value) => {
         const { activeTabIdentifier } = this.props
         this.props.autoSaveCodeToEditor({ tabIdentifier: activeTabIdentifier, newCode: value })
     }
 
     handleSaveChangesManual = () => {
-        // const { activeTabIdentifier } = this.props
-        // const { editorRef } = this.state
+        const activeTab = this.props.tabs.find(t => t.identifier === this.props.activeTabIdentifier)
+        const activeModelFound = this.state.modelReferences.find(t => t.id === activeTab.modelId)
 
-        // const liveValue = editorRef.getValue()
-        // this.props.saveChanges({ tabIdentifier: activeTabIdentifier, newCode: liveValue })
+        const liveValue = activeModelFound.model.getValue()
+        this.props.saveChanges({ tabIdentifier: this.props.activeTabIdentifier, newCode: liveValue })
     }
 
 
     render() {
-        const { tabs, activeTabIdentifier, loggedIn } = this.props
+        const { tabs, activeTabIdentifier } = this.props
         const tabsLite = tabs.map(x => {
             return { identifier: x.identifier, title: x.title, saved: x.saved, lastSave: x.lastSave }
         })
         const activeTab = tabs.find(t => t.identifier === activeTabIdentifier)
         let activeModel = null
-        if(this._editor && activeTab.modelId){
+        if(this._editor && activeTab && activeTab.modelId){
             const modelFound = this.state.modelReferences.find(t => t.id === activeTab.modelId)
             if(modelFound){
                 activeModel = modelFound.model
-                console.log(activeModel)
                 if(activeModel){
                     this._editor.setModel(activeModel)
                 }
             }
         }
-        // console.log(activeTab.src)
 
         return (
             <RootStyle>
@@ -204,7 +206,9 @@ class MonacoContainer extends React.PureComponent {
                         setRootRef={this.handleRootRef}
                         _editor={this._editor}
                         _model={activeModel}
+                        identifier={activeTab.identifier}
                         value={activeTab.src}
+                        notifyChange={this.notifyTabSaveState}
                         onValueChange={this.handleSaveChangesAuto}
                     />
                 </EditorStyle>

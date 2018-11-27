@@ -27,7 +27,8 @@ class EditorStatusBar extends React.Component {
         super(props);
         this.state = {
             isStatusBarHovering:false,
-            showSaveStatus: false
+            showSaveStatus: false,
+            saveStatusText:'autosaved'
         }
     }
 
@@ -37,15 +38,29 @@ class EditorStatusBar extends React.Component {
         const lastSaveAgent = focusedTab.lastSave
 
         if(this.props.tabs !== prevProps.tabs){
-            const isAutoSaved = lastSaveAgent === 'auto' ? true : false
-            if(isAutoSaved){
+            const prevTabState = prevProps.tabs.find(t => t.identifier === activeTabIdentifier)
+            
+            // const isAutoSaved = lastSaveAgent === 'auto' ? true : false
+            if(lastSaveAgent === 'auto' && focusedTab.saved === true && prevTabState && prevTabState.saved === false){
                 this.setState({
-                    showSaveStatus:true
+                    showSaveStatus:true,
+                    saveStatusText:'autosaved'
                 },()=>{
                     setTimeout((self)=>{
                         self.setState({ showSaveStatus: false })
                     },1500,this)
                 })
+            } else if(lastSaveAgent === 'manual' && focusedTab.saved === true && prevTabState.saved === false) {
+                this.setState({
+                    showSaveStatus:true,
+                    saveStatusText:'saved'
+                },()=>{
+                    setTimeout((self)=>{
+                        self.setState({ showSaveStatus: false })
+                    },1500,this)
+                })
+            } else {
+                return
             }
         }
     }
@@ -81,8 +96,6 @@ class EditorStatusBar extends React.Component {
         const { tabs, activeTabIdentifier } = this.props
         const focusedTab = tabs.find(t => t.identifier === activeTabIdentifier)
         const isSaved = focusedTab.saved
-        // const lastSaveAgent = focusedTab.lastSave
-
         return (
             <RootStyle onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave} >
                 <TabsContainerStyle>
@@ -126,7 +139,7 @@ class EditorStatusBar extends React.Component {
                 {
                     this.state.showSaveStatus?
                     <div style={{ fontSize:'0.8em', alignSelf:'center', opacity:'0.6', padding:'0 10px 0 0' }} >
-                        autosaved
+                        {this.state.saveStatusText}
                     </div>
                     :
                     null

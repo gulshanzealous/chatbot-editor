@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import * as monaco from 'monaco-editor';
+// import * as monaco from 'monaco-editor';
 import { connect } from 'react-redux'
 import { Editor, EditorStatusBar } from '../containers'
 import { addTabToEditor, removeTabFromEditor, focusOnTabInEditor, autoSaveCodeToEditor, saveChanges, sendTabSaveState } from '../redux/actions'
