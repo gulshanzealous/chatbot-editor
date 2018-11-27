@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
-import { Playground, EditorContainer, Topbar } from '../containers'
+import { Playground, EditorContainer, Topbar, MonacoContainer } from '../containers'
 import NotificationSetup from '../config/NotificationSetup'
 
 const RootStyle = styled.div`
@@ -57,7 +57,8 @@ class Layout extends React.Component {
 
                 <ContentContainerStyle>
                     <EditorContainerStyle>
-                        <EditorContainer notificationCreator={notificationCreator} />
+                        {/* <EditorContainer notificationCreator={notificationCreator} /> */}
+                        <MonacoContainer />
                     </EditorContainerStyle>
                     <PlaygroundContainerStyle>
                         <Playground notificationCreator={notificationCreator} />

@@ -1,16 +1,16 @@
 
 import {
     EDITOR_TAB_ADD, EDITOR_TAB_CLOSE, EDITOR_TAB_FOCUS,
-    EDITOR_NOTIFY_UNSAVED, EDITOR_SAVE_CHANGES,
+    EDITOR_NOTIFY_UNSAVED, EDITOR_SAVE_CHANGES, SAVE_NEW_MODEL
     // CREATE_NOTIFICATION
 } from '../types'
 
 
-export const addTabToEditor = () => {
+export const addTabToEditor = ({ tabIdentifier }) => {
     return {
         type: EDITOR_TAB_ADD,
         payload:{
-            tabIdentifier: Date.now()
+            tabIdentifier
         }
     }
 }
@@ -56,6 +56,16 @@ export const sendTabSaveState = ({ tabIdentifier, isSaved }) => {
         type: EDITOR_NOTIFY_UNSAVED,
         payload:{
             isSaved, tabIdentifier
+        }
+    }
+}
+
+
+export const saveNewModel = ({ tabIdentifier, model }) => {
+    return {
+        type: SAVE_NEW_MODEL,
+        payload:{
+            model, tabIdentifier
         }
     }
 }

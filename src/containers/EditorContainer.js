@@ -34,7 +34,6 @@ class EditorContainer extends React.Component {
         }
     }
 
-
     handleAddTab = () => {
         this.props.addTabToEditor()
     }
@@ -116,10 +115,10 @@ class EditorContainer extends React.Component {
 }
 
 const mapStateToProps = ({ editorStore, appStore }) => {
-    const { tabs, activeTabIdentifier, editorRef } = editorStore
+    const { tabs, activeTabIdentifier } = editorStore
     const { loggedIn } = appStore
     return {
-        tabs, activeTabIdentifier, editorRef,
+        tabs, activeTabIdentifier,
         loggedIn
     }
 }

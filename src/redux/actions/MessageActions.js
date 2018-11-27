@@ -27,10 +27,13 @@ export const sendMessageCommand = ({ userMessage, sourceCode, notificationCreato
 
             // query an api or execute something here
 
-            setTimeout(() => {
+            setTimeout(async () => {
                 try {
-                    const evaluated = safeEval(sourceCode)
-                    const resp = evaluated(userMessage)
+                    const context = {
+                        process: process,
+                    }
+                    const evaluated = safeEval(sourceCode, context)
+                    const resp = await evaluated(userMessage)
                     console.log(resp)
                     dispatch({
                         type: EXECUTE_COMMAND_SUCCESS,
@@ -44,14 +47,14 @@ export const sendMessageCommand = ({ userMessage, sourceCode, notificationCreato
                     })
                 } catch (e) {
                     console.log(e)
-                    
+
                     dispatch({
                         type: CREATE_NOTIFICATION,
-                        payload:{
-                            notification:{
-                                title:"Oops! SyntaxError.", 
-                                message: e.message ? e.message : "Syntax Error or Unresponsive API", 
-                                type:"danger",
+                        payload: {
+                            notification: {
+                                title: "Oops! SyntaxError.",
+                                message: e.message ? e.message : "Syntax Error or Unresponsive API",
+                                type: "danger",
                                 id: uuid()
                             }
                         }
@@ -67,11 +70,11 @@ export const sendMessageCommand = ({ userMessage, sourceCode, notificationCreato
             console.log(e)
             dispatch({
                 type: CREATE_NOTIFICATION,
-                payload:{
-                    notification:{
-                        title:"Oops! An error occurred.", 
-                        message: e.message ? e.message :  "Something went wrong. Please try again.",
-                        type:"danger",
+                payload: {
+                    notification: {
+                        title: "Oops! An error occurred.",
+                        message: e.message ? e.message : "Something went wrong. Please try again.",
+                        type: "danger",
                         id: uuid()
                     }
                 }

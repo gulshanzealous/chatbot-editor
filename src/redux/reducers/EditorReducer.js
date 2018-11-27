@@ -1,7 +1,7 @@
 
 import {
     EDITOR_TAB_ADD, EDITOR_TAB_CLOSE, EDITOR_TAB_FOCUS,
-    EDITOR_NOTIFY_UNSAVED, EDITOR_SAVE_CHANGES,
+    EDITOR_NOTIFY_UNSAVED, EDITOR_SAVE_CHANGES, SAVE_NEW_MODEL,
     LOGOUT_SUCCESS
 } from '../types'
 
@@ -10,10 +10,13 @@ const mainJsBoilerCode = `
 * Start adding code here. Have fun. 
 */
 
-function processMessage(message){
+async function processMessage(message){
     // call an API or do some programming chops and return a 'AI' reply
-
-    return "I'm offline right now.Sorry!"
+    const resRaw = await fetch("https://reqres.in/api/users/1")
+    var res = await resRaw.json()
+    return res.data
+    
+    // return "I'm offline right now.Sorry!"
 }
 `
 const newTabBoilerCode = `
@@ -27,18 +30,35 @@ const INITIAL_STATE = {
         {
             identifier: 0,
             title: 'main.js',
+            modelId:null,
             src: mainJsBoilerCode,
             lastSave:'auto',
             saved:true,
+            modelIdOptions:{
+                language:'javascript',
+                path:''
+            }
         },
         {
             identifier: 1,
             title: 'setup.js',
+            modelId:null,
             src: newTabBoilerCode,
             lastSave:'auto',
             saved:true,
+            modelOptions:{
+                language:'javascript',
+                path:''
+            }
         },
     ],
+    editorOptions:{
+        theme: "vs-dark",
+            selectOnLineNumbers: true,
+            minimap: {
+                enabled: false
+        },
+    },
     activeTabIdentifier: 0
 }
 
@@ -88,6 +108,18 @@ const handler = {
             tabs: state.tabs.map(tab => {
                 if(tab.identifier === tabIdentifier){
                     return { ...tab, saved: isSaved }
+                }
+                return tab
+            })
+        }
+    },
+    [SAVE_NEW_MODEL]: (state,action) => {
+        const {model, tabIdentifier} = action.payload
+        return {
+            ...state,
+            tabs: state.tabs.map(tab => {
+                if(tab.identifier === tabIdentifier){
+                    return { ...tab, modelId: model }
                 }
                 return tab
             })
