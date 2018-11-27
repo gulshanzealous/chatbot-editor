@@ -15,7 +15,7 @@ async function processMessage(message){
 
     const res = await axios.get("https://reqres.in/api/users/1")
     const name = res.data.data.first_name
-    return name
+    return "Hi! I am "+ name + ". My responses are limited."
 
     // return "I'm offline right now.Sorry!"
 }
