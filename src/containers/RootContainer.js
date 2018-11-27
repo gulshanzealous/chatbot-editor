@@ -11,6 +11,8 @@ const RootStyle = styled.div`
     color:#fff;
     width:100%;
     height:100vh;
+    overflow-x:hidden;
+    overflow-y:hidden;
 `
 
 const TopbarStyle = styled.div`
@@ -24,11 +26,16 @@ const ContentContainerStyle = styled.div`
 `
 
 const EditorContainerStyle = styled.div`
-    flex:0 0 45%;
+    flex:0 0 46%;
+    display:flex;
+    /* max-width:100%; */
 `
 
 const PlaygroundContainerStyle = styled.div`
-    flex:0 0 54.9%;
+    /* flex:0 0 50%; */
+    display:flex;
+    max-width:54%;
+
 `
 
 

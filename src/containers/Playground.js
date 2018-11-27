@@ -11,29 +11,34 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 const RootStyle = styled.div`
     width:100%;
     height:100%;
+    /* max-width:80%; */
     border-width:0 0px 0px 1px;
     border-style:solid;
     border-color:rgba(255,255,255,0.09);
     display:flex;
     flex-flow:column nowrap;
     align-items:center;
+    
 `
 
 const MainBoxStyle = styled.div`
     height:65%;
     width:65%;
-    margin:10% 0 0 0;
+    margin:10% 0% 0 0;
     display:flex;
     flex-flow:column;
     justify-content:space-between;
 `
 const OutputBoxStyle = styled.div`
     flex:0 0 75%;
-    overflow: hidden;
+    width:100%;
     box-shadow: 0 2px 4px 4px rgba(0, 0, 0, 0.08);
     background-color:#1f1f1f;
-
+    display:flex;
+    justify-content:center;
+    align-items:center;
 `
+
 const TypingBoxStyle = styled.div`
     flex:0 0 15%;
 `
@@ -70,7 +75,7 @@ class Playground extends React.Component {
             <RootStyle>
                 <MainBoxStyle>
                     <OutputBoxStyle >
-                        <PerfectScrollbar containerRef={ref => this._scrollRef = ref} >
+                        <PerfectScrollbar containerRef={ref => this._scrollRef = ref} option={{suppressScrollX:false}} >
                             <OutputBox
                                 messages={this.props.messages}
                                 processing={this.props.processing}

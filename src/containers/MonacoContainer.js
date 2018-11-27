@@ -7,7 +7,7 @@ import { addTabToEditor, removeTabFromEditor, focusOnTabInEditor, autoSaveCodeTo
 const uuid = require('uuid/v1')
 
 const RootStyle = styled.div`
-    /* width:100%; */
+    width:100%;
     height:100%;
     display:flex;
     flex-flow: column nowrap;
@@ -24,8 +24,9 @@ const TabContainerStyle = styled.div`
 `
 
 const EditorStyle = styled.div`
-    flex: 1 1 0%;
+    height:100%;
     width:100%;
+    display:flex;
     overflow-y:hidden;
 `
 

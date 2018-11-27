@@ -2,6 +2,7 @@ import {
     EXECUTE_COMMAND_START, EXECUTE_COMMAND_SUCCESS, EXECUTE_COMMAND_FAIL,
     CREATE_NOTIFICATION
 } from '../types'
+import axios from 'axios'
 const uuid = require('uuid/v4')
 
 var safeEval = require('safe-eval')
@@ -31,10 +32,14 @@ export const sendMessageCommand = ({ userMessage, sourceCode, notificationCreato
                 try {
                     const context = {
                         process: process,
+                        Window: Window,
+                        fetch: function () { return fetch },
+                        axios: axios
                     }
                     const evaluated = safeEval(sourceCode, context)
+                    console.log(evaluated)
                     const resp = await evaluated(userMessage)
-                    console.log(resp)
+                    // console.log(resp.data.data.first_name)
                     dispatch({
                         type: EXECUTE_COMMAND_SUCCESS,
                         payload: {

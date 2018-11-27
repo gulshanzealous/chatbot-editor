@@ -9,7 +9,7 @@ import ReduxThunk from 'redux-thunk'
 import rootReducer from './reducers'
 
 const middlewares = [
-    logger,
+    // logger,
     ReduxThunk,
 ];
   

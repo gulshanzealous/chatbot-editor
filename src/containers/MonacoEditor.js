@@ -4,6 +4,7 @@ import * as monaco from 'monaco-editor';
 
 const RootStyle = styled.div`
     flex: 1 1 0%;
+    display:flex;
     height:100%;
 `
 

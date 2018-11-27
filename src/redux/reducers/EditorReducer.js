@@ -12,10 +12,11 @@ const mainJsBoilerCode = `
 
 async function processMessage(message){
     // call an API or do some programming chops and return a 'AI' reply
-    const resRaw = await fetch("https://reqres.in/api/users/1")
-    var res = await resRaw.json()
-    return res.data
-    
+
+    const res = await axios.get("https://reqres.in/api/users/1")
+    const name = res.data.data.first_name
+    return name
+
     // return "I'm offline right now.Sorry!"
 }
 `
