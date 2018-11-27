@@ -9,10 +9,16 @@ const RootStyle = styled.div`
 
 
 class MonacoEditor extends React.Component {
-    
+
+
     componentDidMount() {
         this.props.setRootRef(this._node)
+
+
+        // this.resizeEditor()
+        // window.addEventListener("resize", this.resizeEditor)
     }
+
 
     componentDidUpdate(prevProps){
         if(this.props._model !== prevProps._model && this.props._model && this.props._editor){
@@ -61,11 +67,13 @@ class MonacoEditor extends React.Component {
 
     componentWillUnmount() {
         this._subscription && this._subscription.dispose();
+        // window.removeEventListener("resize", this.resizeEditor);
     }
 
     render() {
         return (
-            <RootStyle ref={c => this._node = c} />
+            <RootStyle  ref={c => this._node = c} 
+            />
         )
     }
 }

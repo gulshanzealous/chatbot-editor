@@ -7,7 +7,7 @@ import { addTabToEditor, removeTabFromEditor, focusOnTabInEditor, autoSaveCodeTo
 const uuid = require('uuid/v1')
 
 const RootStyle = styled.div`
-    width:100%;
+    /* width:100%; */
     height:100%;
     display:flex;
     flex-flow: column nowrap;
