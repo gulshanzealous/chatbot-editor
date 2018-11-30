@@ -8,7 +8,7 @@ const uuid = require('uuid/v4')
 var safeEval = require('safe-eval')
 
 const Chatbot = {
-    echo : (word) => {
+    echo: (word) => {
         return `I echo words : ${word}`
     }
 }
